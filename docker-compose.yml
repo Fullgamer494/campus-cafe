@@ -1,0 +1,56 @@
+# ============================================
+# Campus Café - Docker Compose
+# ============================================
+# Uso:
+#   1. Copia .env.example a .env y configura los valores
+#   2. docker compose up --build
+#   3. Accede a http://localhost:3000
+# ============================================
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: campus_cafe_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?error - POSTGRES_DB no está definido}
+      POSTGRES_USER: ${POSTGRES_USER:?error - POSTGRES_USER no está definido}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?error - POSTGRES_PASSWORD no está definido}
+      # Variables para el script init-roles.sh
+      CAFE_APP_USER: ${CAFE_APP_USER:?error - CAFE_APP_USER no está definido}
+      CAFE_APP_PASSWORD: ${CAFE_APP_PASSWORD:?error - CAFE_APP_PASSWORD no está definido}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./db/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+      - ./db/reports_vw.sql:/docker-entrypoint-initdb.d/03-views.sql:ro
+      - ./db/indexes.sql:/docker-entrypoint-initdb.d/04-indexes.sql:ro
+      - ./db/init-roles.sh:/docker-entrypoint-initdb.d/05-roles.sh:ro
+    # Puerto expuesto solo para desarrollo/debugging local
+    # En producción, remover o comentar esta sección
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: campus_cafe_app
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${CAFE_APP_USER}:${CAFE_APP_PASSWORD}@db:5432/${POSTGRES_DB}
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
