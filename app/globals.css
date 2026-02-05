@@ -172,6 +172,34 @@ a:hover {
     border-color: var(--color-primary);
 }
 
+/* Botones */
+.btn {
+    padding: 8px 16px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.btn-secondary {
+    background-color: var(--color-gray-200);
+    color: var(--color-gray-800);
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-gray-300);
+}
+
 /* Tablas */
 table {
     width: 100%;
@@ -203,4 +231,64 @@ tbody tr:hover {
 
 .text-right {
     text-align: right;
+}
+
+/* Paginacion */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+}
+
+.pagination-info {
+    font-size: 13px;
+    color: var(--color-gray-600);
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.pagination-btn {
+    padding: 8px 14px;
+    border: 1px solid var(--color-gray-300);
+    background-color: var(--color-white);
+    font-size: 13px;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    border-color: var(--color-primary);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-btn.active {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+/* Loading */
+.loading {
+    padding: 40px;
+    color: var(--color-gray-600);
+}
+
+/* Seccion de tabla con titulo */
+.table-section {
+    margin-bottom: 32px;
+}
+
+.table-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 12px;
 }
