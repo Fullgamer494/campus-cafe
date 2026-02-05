@@ -90,3 +90,48 @@ a:hover {
     padding: 32px 40px;
     overflow-x: auto;
 }
+
+/* Titulos de pagina */
+.page-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 8px;
+}
+
+.page-description {
+    font-size: 14px;
+    color: var(--color-gray-600);
+    margin-bottom: 24px;
+    max-width: 800px;
+}
+
+/* KPI Cards */
+.kpi-grid {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.kpi-card {
+    background-color: var(--color-white);
+    padding: 16px 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    min-width: 160px;
+}
+
+.kpi-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.kpi-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-primary);
+}
