@@ -16,18 +16,17 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:?error - POSTGRES_DB no está definido}
       POSTGRES_USER: ${POSTGRES_USER:?error - POSTGRES_USER no está definido}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?error - POSTGRES_PASSWORD no está definido}
-      # Variables para el script init-roles.sh
       CAFE_APP_USER: ${CAFE_APP_USER:?error - CAFE_APP_USER no está definido}
       CAFE_APP_PASSWORD: ${CAFE_APP_PASSWORD:?error - CAFE_APP_PASSWORD no está definido}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
       - ./db/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+      - ./db/migrate.sql:/docker-entrypoint-initdb.d/02b-migrate.sql:ro
       - ./db/reports_vw.sql:/docker-entrypoint-initdb.d/03-views.sql:ro
       - ./db/indexes.sql:/docker-entrypoint-initdb.d/04-indexes.sql:ro
       - ./db/init-roles.sh:/docker-entrypoint-initdb.d/05-roles.sh:ro
-    # Puerto expuesto solo para desarrollo/debugging local
-    # En producción, remover o comentar esta sección
+
     ports:
       - "5432:5432"
     healthcheck:
