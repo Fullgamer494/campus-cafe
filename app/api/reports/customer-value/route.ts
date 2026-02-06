@@ -1,21 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { query } from "@/lib/db";
 
-interface CustomerValue {
-    customer_id: number;
-    customer_name: string;
-    customer_email: string;
-    num_ordenes: string;
-    total_gastado: string;
-    gasto_promedio: string;
-    ultima_compra: string;
-    segmento_cliente: string;
-}
+const CustomerValueSchema = z.object({
+    customer_id: z.number(),
+    customer_name: z.string(),
+    customer_email: z.string().email(),
+    num_ordenes: z.string(),
+    total_gastado: z.string(),
+    gasto_promedio: z.string(),
+    ultima_compra: z.string(),
+    segmento_cliente: z.string(),
+});
+
+type CustomerValue = z.infer<typeof CustomerValueSchema>;
+
+const customerSchema = z.object({
+    page: z.coerce.number().min(1).default(1).catch(1),
+    limit: z.coerce.number().min(1).max(100).default(10).catch(10),
+});
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
-    const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
-    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "10")));
+    const validated = customerSchema.safeParse({
+        page: searchParams.get("page"),
+        limit: searchParams.get("limit"),
+    });
+
+    if (!validated.success) {
+        return NextResponse.json({ error: validated.error.issues }, { status: 400 });
+    }
+
+    const { page, limit } = validated.data;
     const offset = (page - 1) * limit;
 
     const [countResult, data] = await Promise.all([

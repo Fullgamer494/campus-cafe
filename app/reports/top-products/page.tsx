@@ -60,8 +60,8 @@ export default function TopProductsPage() {
         setPage(1);
     };
 
-    const totalRevenue = response?.data.reduce((sum, row) => sum + parseFloat(row.total_revenue), 0) || 0;
-    const topProduct = response?.data[0]?.product_name || "-";
+    const totalRevenue = response?.data?.reduce((sum, row) => sum + parseFloat(row.total_revenue), 0) || 0;
+    const topProduct = response?.data?.[0]?.product_name || "-";
 
     return (
         <>
@@ -107,8 +107,8 @@ export default function TopProductsPage() {
 
             {loading ? (
                 <p className="loading">Cargando datos...</p>
-            ) : !response?.data.length ? (
-                <p className="loading">No se encontraron productos</p>
+            ) : !response?.data || response.data.length === 0 ? (
+                <p className="loading">No se encontraron productos o hubo un error al cargar.</p>
             ) : (
                 <>
                     <table>

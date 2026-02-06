@@ -28,7 +28,7 @@ services:
       - ./db/init-roles.sh:/docker-entrypoint-initdb.d/05-roles.sh:ro
 
     ports:
-      - "5432:5432"
+      - "5435:5432"
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
       interval: 10s
